@@ -1,0 +1,74 @@
+// Microprocessor project
+// Implementation of single hexadecimal digit countdown (F-0)
+// Microcontroller: Arduino Uno
+// Display: 7 segment display (common anode)
+
+
+#define DELAY 1000  
+
+// Identifying pins to which segments are attached
+enum Pins {A = 7, B = 8, C = 9, D = 10, E = 11, F = 5, G = 6}; 
+int DISPLAY_PINS[7] = {A, B, C, D, E, F, G};
+
+// Pattern to numbers.
+// 1 = SEGMENT ON, 0 = SEGMENT OFF.
+bool NUMS[16][7] = {
+//{A, B, C, D, E, F, G}  
+  {1, 1, 1, 1, 1, 1, 0}, // 0
+  {0, 1, 1, 0, 0, 0, 0}, // 1
+  {1, 1, 0, 1, 1, 0, 1}, // 2
+  {1, 1, 1, 1, 0, 0, 1}, // 3
+  {0, 1, 1, 0, 0, 1, 1}, // 4
+  {1, 0, 1, 1, 0, 1, 1}, // 5
+  {1, 0, 1, 1, 1, 1, 1}, // 6
+  {1, 1, 1, 0, 0, 0, 0}, // 7
+  {1, 1, 1, 1, 1, 1, 1}, // 8
+  {1, 1, 1, 0, 0, 1, 1}, // 9
+  {1, 1, 1, 0, 1, 1, 1}, // A
+  {0, 0, 1, 1, 1, 1, 1}, // b
+  {1, 0, 0, 1, 1, 1, 0}, // C
+  {0, 1, 1, 1, 1, 0, 1}, // d
+  {1, 0, 0, 1, 1, 1, 1}, // E
+  {1, 0, 0, 0, 1, 1, 1}  // F
+};
+
+// ==============================================================================
+
+void setupPins();
+void showNum(int);
+void countDown();
+
+// ==============================================================================
+
+void setup()
+{
+  setupPins();  // Puts pins connected to LED segments in output mode
+}
+
+void loop()
+{
+  countDown();
+}
+
+// =============================================================================
+
+void showNum(int num)
+{
+  for(int i = 0; i < 7; i++)
+      digitalWrite(DISPLAY_PINS[i], !NUMS[num][i]);
+}
+
+void setupPins()
+{
+  for(int i = 0; i < 7; i++)
+    pinMode(DISPLAY_PINS[i], OUTPUT);
+}
+
+void countDown()
+{
+  for(int i = 15; i >= 0; i--)
+  {
+    showNum(i);
+    delay(DELAY);  // ! second delay in between
+  }
+}
